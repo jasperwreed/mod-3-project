@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch (error => error.message)
     }
 
-
+    //Create New Meditation for the 'List of My Meditations'
     function postMeditation(e, user){
         let newLi = document.createElement('li')
         newLi.textContent = `${e.target.date.value} - ${e.target.name.value}`
@@ -124,20 +124,33 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch (error => error.message)
     }
 
-    // function postNotes(e, user){
-    //    console.log(e, user)
-    //     fetch(notesUrl, {
-    //         method: 'POST',
+    // Delete Meditation from 'My Meditation List'
+    function deleteMeditation(user){
+        fetch(`http://localhost:3000/meditations/${user.id.meditations}`,{
+            method: 'DELETE'
+        })
+        .then (resp => resp.json())
+        // .then( () => {
+        //     ulList.removeChild()   
+        // }) 
+
+    }
+
+    // function patchMeditation(e, user) {
+    //     const meditation = {
+    //         date: e.target.date.value,
+    //         name: e.target.name.value,
+    //         user_id: user.id
+    //     }
+    //     fetch(`http://localhost:3000/meditations/${user.id}`, {
+    //         method: 'PATCH',
     //         headers: {
     //             'Content-Type': 'application/json',
     //             'Accept': 'application/json'
     //         },
-    //         body: JSON.stringify({description: e.target[0].value, })
+    //         body: JSON.stringify(meditation)
     //     })
-    //     .then(resp => resp.json())
-    //     .then(console.log)
     // }
-
 
 
     
@@ -229,15 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    
-    // function buildMeditationList(user){       
-    //     user.meditations.forEach(meditation => {
-    //         let divMeditations = document.createElement('div')
-    //         divMeditations.className = 'user-meditations-list'
-    //         divMeditations.innerText = `${meditation.name}`
-    //         individualMed.appendChild(divMeditations)
-    //     })
-    // }
+
 
     ///build Countdown Timer
     function countDown (t){
@@ -272,8 +277,16 @@ document.addEventListener('DOMContentLoaded', function() {
             ulList.appendChild(liList)
             liList.textContent = `${meditation.date} - ${meditation.name}`
             editMedBtn.innerText = 'Edit'
-            liList.appendChild(deleteMedBtn)
+            liList.append(editMedBtn, deleteMedBtn)
             deleteMedBtn.innerText = 'X'
+
+            // editMedBtn.addEventListener('click', (e) =>{
+            //     patchMeditation(e, user)
+            // })
+
+            deleteMedBtn.addEventListener('click', (e) => {
+                deleteMeditation(e, user)
+            })
            
            
         })
@@ -302,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         meditationForm.addEventListener('submit', (e) => {
             e.preventDefault()
-            console.log('hi')
             postMeditation(e, user)
         })
 
